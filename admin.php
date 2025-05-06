@@ -363,13 +363,13 @@ $row1 = $_SESSION['tot'];
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="viewPatient.php">
                         <i class="bi bi-people-fill"></i>
                         <span class="menu-text">Patients</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="EditPage.php">
                         <i class="bi bi-person-badge"></i>
                         <span class="menu-text">Staff</span>
                     </a>

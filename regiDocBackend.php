@@ -19,8 +19,8 @@
         $role = "doctor";
 
 
-        $query = "INSERT INTO doctors(doctorid,firstname,laststname,specialization,initials,email,password,role,department) 
-                  VALUES('$id','$firstName','$lastName','$spec','$initials','$email','$password','$role','$dep')";
+        $query = "INSERT INTO doctors(doctorid,firstname,laststname,specialization,initials,email,password,role,department,sex) 
+                  VALUES('$id','$firstName','$lastName','$spec','$initials','$email','$password','$role','$dep','$sex')";
        
         if ($conn->query($query) === TRUE) {
             echo "Successfully Registered";

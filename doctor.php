@@ -1,7 +1,25 @@
 <?php
      session_start();
      $row = $_SESSION['user'];
+     $numP =  $_SESSION['total'];
 
+     // Connect to database
+        require_once "connect.php";
+     $sql3 = "SELECT * FROM appointments WHERE doctorid = ? AND appointment_date = CURDATE() ORDER BY appointment_time DESC";   
+     $stmt3 = $conn-> prepare($sql3);
+     $stmt3->bind_param("s", $row['doctorid']);
+     $stmt3 ->execute();
+     $result3 = $stmt3->get_result();
+     $row3 = $result3->fetch_assoc();
+
+     $sql = "SELECT COUNT(*) AS tot FROM appointments WHERE doctorid = ? AND appointment_date = CURDATE() ORDER BY appointment_time DESC"; 
+        $stmt = $conn-> prepare($sql);
+        $stmt->bind_param("s", $row['doctorid']);
+        $stmt ->execute();
+        $result = $stmt->get_result();
+        $num = $result->fetch_assoc();
+
+        $conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -245,9 +263,10 @@
                         <a href="#" class="btn btn-light">
                             <i class="bi bi-calendar-plus"></i> New Appointment
                         </a>
-                        <a href="#" class="btn btn-light">
-                            <i class="bi bi-file-earmark-plus"></i> New Patient
-                        </a>
+                        <a class="btn btn-light btn-sm" href="Login.php" onclick="return confirm('Are you sure you want to logout?')">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span class="menu-text">Logout</span>
+                    </a>
                     </div>
                 </div>
             </div>
@@ -260,14 +279,14 @@
             <div class="col-md-3">
                 <div class="stat-card appointments">
                     <i class="bi bi-calendar-check" style="font-size: 1.5rem;"></i>
-                    <div class="stat-value">18</div>
+                    <div class="stat-value"><?php echo htmlspecialchars($num['tot']); ?></div>
                     <div class="stat-label">Today's Appointments</div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="stat-card patients">
                     <i class="bi bi-people" style="font-size: 1.5rem;"></i>
-                    <div class="stat-value">142</div>
+                    <div class="stat-value"><?php echo htmlspecialchars($numP['total']); ?> </div>
                     <div class="stat-label">Active Patients</div>
                 </div>
             </div>
@@ -294,86 +313,34 @@
                 <div class="card dashboard-card">
                     <div class="card-header">
                         <i class="bi bi-calendar-day"></i> Today's Schedule
-                        <span class="ms-auto badge bg-primary">Wed, May 15</span>
+                        <span class="ms-auto badge bg-primary" id="today-date"><p  id="today-date"></p></span>
                     </div>
                     <div class="card-body">
+                <?php
+                    if ($result3->num_rows > 0) {
+                        while($row3 = $result3->fetch_assoc()) {
+                ?>            
                         <div class="appointment-item">
-                            <div class="appointment-time">08:30 AM</div>
+                            <div class="appointment-time"><?php echo htmlspecialchars($row3['appointment_time'] = date('h:i A', strtotime($row3['appointment_time']))); ?></div>
                             <div class="appointment-details">
                                 <div class="d-flex align-items-center">
                                     <div>
-                                        <h6 class="mb-0">Robert Johnson</h6>
-                                        <small class="text-muted">Follow-up consultation</small>
+                                        <h6 class="mb-0"><?php echo htmlspecialchars($row3['patientid']); ?></h6>
+                                        <small class="text-muted"><?php echo htmlspecialchars($row3['reason']); ?></small>
                                     </div>
                                 </div>
                             </div>
-                            <span class="appointment-status status-completed">Completed</span>
+                            <span class="appointment-status status-completed"><?php echo htmlspecialchars($row3['status']); ?></span>
                         </div>
-                        
-                        <div class="appointment-item">
-                            <div class="appointment-time">09:15 AM</div>
-                            <div class="appointment-details">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <h6 class="mb-0">Emily Davis</h6>
-                                        <small class="text-muted">New patient evaluation</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <span class="appointment-status status-completed">Completed</span>
-                        </div>
-                        
-                        <div class="appointment-item">
-                            <div class="appointment-time">10:00 AM</div>
-                            <div class="appointment-details">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <h6 class="mb-0">Michael Brown</h6>
-                                        <small class="text-muted">Post-op checkup</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <span class="appointment-status status-scheduled">Scheduled</span>
-                        </div>
-                        
-                        <div class="appointment-item">
-                            <div class="appointment-time">11:30 AM</div>
-                            <div class="appointment-details">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <h6 class="mb-0">Jennifer Wilson</h6>
-                                        <small class="text-muted">Cardiac consultation</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <span class="appointment-status status-scheduled">Scheduled</span>
-                        </div>
-                        
-                        <div class="appointment-item">
-                            <div class="appointment-time">02:00 PM</div>
-                            <div class="appointment-details">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <h6 class="mb-0">David Miller</h6>
-                                        <small class="text-muted">Test results review</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <span class="appointment-status status-scheduled">Scheduled</span>
-                        </div>
-                        
-                        <div class="appointment-item">
-                            <div class="appointment-time">03:30 PM</div>
-                            <div class="appointment-details">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <h6 class="mb-0">Sarah Thompson</h6>
-                                        <small class="text-muted">Emergency follow-up</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <span class="appointment-status status-urgent">Urgent</span>
-                        </div>
+                    
+                    
+                       <?php
+                        }
+                    } else {
+                        echo "<p>No appointments scheduled for today.</p>";
+                    }
+                ?>    
+                     
                     </div>
                 </div>
 
@@ -533,5 +500,11 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+     const today = new Date(); // Replace with actual date values
+     const formattedDate = today.toISOString().split('T')[0]; // e.g., "2025-05-06"
+     document.getElementById("today-date").textContent = formattedDate;
+    </script>
 </body>
 </html>

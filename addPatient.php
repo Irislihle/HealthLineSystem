@@ -108,12 +108,19 @@ function checkUser($conn, $table, $email, $password) {
     $stmt ->execute();
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
+    //getting the total number of appointments
+    $sql2 = "SELECT COUNT(*) AS appoints FROM appointments ";
+    $stmt2 = $conn-> prepare($sql2);
+    $stmt2 ->execute();
+    $result2 = $stmt2->get_result();
+    $row2 = $result2->fetch_assoc();
 
     //storing the user in a session
     session_start();
     $_SESSION['user'] = $user;
     $_SESSION['total'] = $row;
     $_SESSION['tot'] = $row1;
+    $_SESSION['appoints'] = $row2;
 
     header("Location:admin.php");
     echo "<p style='color:green;'>Login successful!</p>";
@@ -130,9 +137,31 @@ function checkUser($conn, $table, $email, $password) {
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
+        //getting the total number of patients
+        $sql = "SELECT COUNT(*) AS total FROM patient";
+        $stmt = $conn-> prepare($sql);
+        $stmt ->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+       //getting the total number of appointments
+        $sql2 = "SELECT COUNT(*) AS appoints FROM appointments wHERE doctorid = ?";
+        $stmt2 = $conn-> prepare($sql2);
+        $stmt2->bind_param("s", $user['doctorid']);
+        $stmt2 ->execute();
+        $result2 = $stmt2->get_result();
+        $row2 = $result2->fetch_assoc();
+        //get all the appointments for the doctor
+        $sql3 = "SELECT *  FROM appointments wHERE doctorid = ?";
+        $stmt3 = $conn-> prepare($sql3);
+        $stmt3->bind_param("s", $user['doctorid']);
+        $stmt3 ->execute();
+        $result3 = $stmt3->get_result();
+        $row3 = $result3->fetch_assoc();
         //storing the user in a session
         session_start();
         $_SESSION['user'] = $user;
+        $_SESSION['total'] = $row;
+        $_SESSION['appoints'] = $row2;
         
 
         header("Location:doctor.php");

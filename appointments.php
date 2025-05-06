@@ -40,15 +40,31 @@
             border-radius: 5px;
             font-size: 16px;
         }
-        .btn {
+        #btn1 {
+            display:flex;
+            justify-content: center;
             background-color: #0066cc;
             color: white;
-            padding: 12px 20px;
+            padding: 12px 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            width: 100%;
+            width: 30%;
+            margin-left: 50%;
+        }
+        #btn2 {
+            display:flex;
+            justify-content: center;
+            background-color: #0066cc;
+            color: white;
+            padding: 12px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 30%;
+            
         }
         .btn:hover {
             background-color: #0055aa;
@@ -86,18 +102,18 @@
             <!-- Doctor Selection -->
             <div class="form-group">
                 <label for="doctor_id">Doctor</label>
-                <select id="doctor_id" name="doctor_id" required>
+                <select id="doctorid" name="doctorid" required>
                     <option value="">Select Doctor</option>
                     <?php
                     // Connect to database
-                    $conn = new mysqli("localhost", "username", "password", "database");
+                    require_once "connect.php";
                     
                     // Fetch doctors
-                    $sql = "SELECT doctor_id, first_name, last_name, specialty FROM Doctors WHERE is_active = 1";
+                    $sql = "SELECT doctorid, firstname, laststname, specialization FROM doctors ";
                     $result = $conn->query($sql);
                     
                     while($row = $result->fetch_assoc()) {
-                        echo "<option value='{$row['doctor_id']}'>{$row['first_name']} {$row['last_name']} ({$row['specialty']})</option>";
+                        echo "<option value='{$row['doctorid']}'>{$row['firstname']} {$row['laststname']} ({$row['specialization']})</option>";
                     }
                     $conn->close();
                     ?>
@@ -113,11 +129,11 @@
             
             <!-- Available Time Slots (will be populated by JavaScript) -->
             <div class="form-group">
-                <label>Available Time Slots</label>
+                <label>Appointment Time</label>
                 <div class="time-slots" id="timeSlots">
                     <!-- Time slots will appear here after date selection -->
                 </div>
-                <input type="hidden" id="appointment_time" name="appointment_time">
+                <input type="Time" id="appointment_time" name="appointment_time">
             </div>
             
             <!-- Appointment Details -->
@@ -125,44 +141,15 @@
                 <label for="reason">Reason for Visit</label>
                 <textarea id="reason" name="reason" rows="3"></textarea>
             </div>
+            <div>
+<div style="display: flex; gap: 10px;">
+    <button type="submit" id='btn1' class="btn">Schedule Appointment</button>
+    <button type="submit" id='btn2' class="btn"><a href="patient.php" style="color: white;">Previous Page</a></button>
+</div>
             
-            <button type="submit" class="btn">Schedule Appointment</button>
         </form>
     </div>
 
-    <script>
-        // Load available time slots when date is selected
-        document.getElementById('appointment_date').addEventListener('change', function() {
-            const date = this.value;
-            const doctorId = document.getElementById('doctor_id').value;
-            
-            if (!date || !doctorId) return;
-            
-            // Fetch available time slots from server
-            fetch(`get_available_slots.php?date=${date}&doctor_id=${doctorId}`)
-                .then(response => response.json())
-                .then(slots => {
-                    const container = document.getElementById('timeSlots');
-                    container.innerHTML = '';
-                    
-                    slots.forEach(slot => {
-                        const slotElement = document.createElement('div');
-                        slotElement.className = 'time-slot';
-                        slotElement.textContent = slot;
-                        slotElement.addEventListener('click', function() {
-                            // Remove previous selection
-                            document.querySelectorAll('.time-slot').forEach(el => {
-                                el.classList.remove('selected');
-                            });
-                            
-                            // Select this slot
-                            this.classList.add('selected');
-                            document.getElementById('appointment_time').value = this.textContent;
-                        });
-                        container.appendChild(slotElement);
-                    });
-                });
-        });
     </script>
 </body>
 </html>

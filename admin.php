@@ -3,6 +3,7 @@ session_start();
 $result = $_SESSION['user'];
 $row = $_SESSION['total'];
 $row1 = $_SESSION['tot'];
+$row2 = $_SESSION['appoints'];
 ?>
 
 <!DOCTYPE html>
@@ -460,8 +461,8 @@ $row1 = $_SESSION['tot'];
                     <div class="stats-card appointments">
                         <div class="row">
                             <div class="col-8">
-                                <div class="stats-count">86</div>
-                                <div class="stats-title">Today's Appointments</div>
+                                <div class="stats-count"><?php echo htmlspecialchars($row2['appoints']); ?></div>
+                                <div class="stats-title">Appointments</div>
                             </div>
                             <div class="col-4 text-end">
                                 <i class="bi bi-calendar-check stats-icon"></i>

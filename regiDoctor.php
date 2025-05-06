@@ -95,8 +95,8 @@
                         <label for="sex" class="form-label required-field">Gender</label>
                         <select class="form-select" id="sex" name="sex" required>
                             <option value="" selected disabled>Select gender</option>
-                            <option value="M">Male</option>
-                            <option value="F">Female</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
                         </select>
                     </div>
                 </div>

@@ -5,19 +5,29 @@
 
      // Connect to database
         require_once "connect.php";
-     $sql3 = "SELECT * FROM appointments WHERE doctorid = ? AND appointment_date = CURDATE() ORDER BY appointment_time DESC";   
+     $sql3 = "SELECT * FROM appointments WHERE doctorid = ?  AND appointment_date = CURDATE() ORDER BY appointment_time ASC";   
      $stmt3 = $conn-> prepare($sql3);
      $stmt3->bind_param("s", $row['doctorid']);
      $stmt3 ->execute();
      $result3 = $stmt3->get_result();
      $row3 = $result3->fetch_assoc();
 
-     $sql = "SELECT COUNT(*) AS tot FROM appointments WHERE doctorid = ? AND appointment_date = CURDATE() ORDER BY appointment_time DESC"; 
+     $sql = "SELECT COUNT(*) AS tot FROM appointments WHERE doctorid = ? "; 
         $stmt = $conn-> prepare($sql);
         $stmt->bind_param("s", $row['doctorid']);
         $stmt ->execute();
         $result = $stmt->get_result();
         $num = $result->fetch_assoc();
+
+
+       $sql2 = "SELECT * FROM patient WHERE patientid = ?";
+         $stmt2 = $conn-> prepare($sql2);
+         $stmt2->bind_param("s", $row3['patientid']);
+         $stmt2 ->execute();
+         $result2 = $stmt2->get_result();
+         $row2 = $result2->fetch_assoc();
+    
+
 
         $conn->close();
 ?>
@@ -319,13 +329,15 @@
                 <?php
                     if ($result3->num_rows > 0) {
                         while($row3 = $result3->fetch_assoc()) {
+               
                 ?>            
                         <div class="appointment-item">
                             <div class="appointment-time"><?php echo htmlspecialchars($row3['appointment_time'] = date('h:i A', strtotime($row3['appointment_time']))); ?></div>
                             <div class="appointment-details">
                                 <div class="d-flex align-items-center">
                                     <div>
-                                        <h6 class="mb-0"><?php echo htmlspecialchars($row3['patientid']); ?></h6>
+                                        <h6 class="mb-0"><?php echo htmlspecialchars($row2['firstname']); ?>  <?php echo htmlspecialchars($row2['lastname']); ?></h6>
+                                        <small><?php echo htmlspecialchars($row3['appointment_date']); ?></small>
                                         <small class="text-muted"><?php echo htmlspecialchars($row3['reason']); ?></small>
                                     </div>
                                 </div>
@@ -336,7 +348,7 @@
                     
                        <?php
                         }
-                    } else {
+                    } else if ($result3->num_rows == 0) {
                         echo "<p>No appointments scheduled for today.</p>";
                     }
                 ?>    

@@ -3,9 +3,31 @@ session_start();
 $result = $_SESSION['user'];
 $row = $_SESSION['total'];
 $row1 = $_SESSION['tot'];
-$row2 = $_SESSION['appoints'];
-?>
+$row4 = $_SESSION['appoints'];
 
+require_once 'connect.php';
+
+$sql3 = "SELECT * FROM appointments WHERE  appointment_date = CURDATE() ORDER BY appointment_time ASC";   
+$stmt3 = $conn-> prepare($sql3);
+$stmt3 ->execute();
+$result3 = $stmt3->get_result();
+$row3 = $result3->fetch_assoc();
+
+$sql2 = "SELECT * FROM patient WHERE patientid = ?";
+$stmt2 = $conn-> prepare($sql2);
+$stmt2->bind_param("s", $row3['patientid']);
+$stmt2 ->execute();
+$result2 = $stmt2->get_result();
+$row2 = $result2->fetch_assoc();
+
+$sql5 = "SELECT * FROM doctors WHERE doctorid = ?";
+$stmt5 = $conn-> prepare($sql5);
+$stmt5->bind_param("s", $row3['doctorid']);
+$stmt5 ->execute();
+$result5 = $stmt5->get_result();
+$row5 = $result5->fetch_assoc();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -376,7 +398,7 @@ $row2 = $_SESSION['appoints'];
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="viewAppoints.php">
                         <i class="bi bi-calendar-check"></i>
                         <span class="menu-text">Appointments</span>
                     </a>
@@ -390,7 +412,7 @@ $row2 = $_SESSION['appoints'];
                 <li class="nav-item">
                     <a class="nav-link" href="#">
                         <i class="bi bi-capsule"></i>
-                        <span class="menu-text">Pharmacy</span>
+                        <span class="menu-text">Add Announcement</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -461,7 +483,7 @@ $row2 = $_SESSION['appoints'];
                     <div class="stats-card appointments">
                         <div class="row">
                             <div class="col-8">
-                                <div class="stats-count"><?php echo htmlspecialchars($row2['appoints']); ?></div>
+                                <div class="stats-count"><?php echo htmlspecialchars($row4['appoints']); ?></div>
                                 <div class="stats-title">Appointments</div>
                             </div>
                             <div class="col-4 text-end">
@@ -530,18 +552,28 @@ $row2 = $_SESSION['appoints'];
                 <div class="col-lg-6 mb-4">
                     <div class="activity-card">
                         <h5 class="card-title mb-4"><i class="bi bi-calendar3 me-2"></i>Upcoming Appointments</h5>
-                        
+             <?php
+                    if ($result3->num_rows > 0) {
+                        while($row3 = $result3->fetch_assoc()) {
+               
+                ?>
                         <div class="activity-item">
                             <div class="activity-icon appointment">
                                 <i class="bi bi-person"></i>
                             </div>
                             <div class="activity-content">
-                                <h6>Michael Brown - 9:00 AM</h6>
-                                <p class="mb-0">Dr. Wilson, Room 205</p>
-                                <small class="activity-time">In 30 minutes</small>
+                                <h6><?php echo htmlspecialchars($row2['firstname']); ?>  <?php echo htmlspecialchars($row2['lastname']); ?> - 
+                                <?php echo htmlspecialchars($row3['appointment_time'] = date('h:i A', strtotime($row3['appointment_time']))); ?></h6>
+                                <p class="mb-0">Dr. <?php echo htmlspecialchars($row5['laststname']); ?>, Room 205</p>
+                                <small class="activity-time">For <?php echo htmlspecialchars($row3['duration']); ?> minutes</small>
                             </div>
                         </div>
-                        
+                        <?php
+                }
+                    } else if ($result3->num_rows == 0) {
+                        echo "<p>No appointments scheduled for today.</p>";
+                    }
+                ?>     
                         <div class="activity-item">
                             <div class="activity-icon appointment">
                                 <i class="bi bi-person"></i>

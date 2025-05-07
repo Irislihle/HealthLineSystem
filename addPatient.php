@@ -1,12 +1,13 @@
 
 <?php
+
 require_once 'connect.php';
 //used lName to check which form you are submitting 
 //since lName is not required on the signin form we used it to verify
 if($_SERVER['REQUEST_METHOD'] == "POST" &&isset($_POST['eName'])){
 
 
-   
+  
     $id = $_POST['pID'];
     $gender = $_POST['gender'];
     $initials = $_POST['initials'];

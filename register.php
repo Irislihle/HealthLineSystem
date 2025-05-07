@@ -291,14 +291,15 @@
 
             <!-- Submit Section -->
             <div class="form-section" style="border-bottom: none; text-align: center;">
-                <button type="submit"  class="btn btn-primary">
+                <button type="submit"  class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#exampleModal">
                     <i class="fas fa-user-plus me-2"></i>Complete Registration
                 </button>
                 <p class="mt-3">Already have an account? <a href="Login.php" style="color: var(--primary-color);">Sign In</a></p>
             </div>
         </form>
     </div>
-    
+   
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

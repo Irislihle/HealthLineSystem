@@ -340,7 +340,10 @@ $row5 = $result5->fetch_assoc();
                 <i class="bi bi-hospital"></i>
                 <span>HealthLine</span>
             </a>
-            
+            <a href="#" class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    HealthLine
+                </a>
             <div class="d-flex align-items-center ms-auto">
                 <div class="emergency-alert me-3">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i>Emergency: 911

@@ -1,3 +1,16 @@
+<?php
+
+session_start();
+
+// Check if the 'error' key exists in the session
+$err = isset($_SESSION['error']) ? $_SESSION['error'] : null;
+
+// Optionally, clear the error after displaying it
+unset($_SESSION['error']);
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -196,7 +209,9 @@
 <body>
     <div class="container">
         <h1 class="form-title">Sign In</h1>
-
+    <?php if ($err): ?>
+        <p style="color : red;font-size: 16px;"><?php echo htmlspecialchars($err); ?></p>
+    <?php endif; ?>
         <form action="addPatient.php" method="post">
            <div class="input-group">
             <i class="fas fa-envelope"></i>

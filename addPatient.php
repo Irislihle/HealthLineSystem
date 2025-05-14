@@ -199,10 +199,14 @@ function checkUser($conn, $table, $email, $password) {
         exit();
     }
 
-    else{
-        
+    elseif(!$user) {
+        // If no user found in any table, set error message
+        $err = "Invalid credentials. Please try again.";
+        session_start();
+        // Store the error message in session
+        $_SESSION['error'] = $err;
         header("Location:Login.php");
-        echo "Invalid credentials. Please try again.";
+    
     }
 
 

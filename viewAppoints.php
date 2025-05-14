@@ -27,27 +27,7 @@ $result = $conn->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doctors Directory</title>
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-            color: #333;
-        }
-        
-        .container {
-            max-width: 80%;
-            overflow-x: auto;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            background: white;
-            margin-bottom: 20px;
-            margin-left: 10%;
-        }
+       
         
         h1 {
             color: #2c3e50;
@@ -310,9 +290,7 @@ $result = $conn->query($sql);
         </table>
     </div>
     
-    <div class="button-container">
-        <button class="btn btn-back" ><a href="admin.php" style="color: white;">Back to Previous Page</a></button>
-    </div>
+  
     
        
     <script>

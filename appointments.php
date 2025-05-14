@@ -1,3 +1,8 @@
+<?php
+session_start();
+$result = $_SESSION['user'];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -96,7 +101,7 @@
             <!-- Patient Information -->
             <div class="form-group">
                 <label for="patient_id">Patient ID</label>
-                <input type="text" id="patient_id" name="patient_id" required>
+                <input type="text" id="patient_id" name="patient_id" value="<?php echo htmlspecialchars($result['patientid']); ?>" required>
             </div>
             
             <!-- Doctor Selection -->

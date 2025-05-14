@@ -8,17 +8,17 @@ $result1 = $_SESSION['user'];
 // Handle delete action
 if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
-    $sql = "DELETE FROM patient WHERE patientid='$delete_id'";
+    $sql = "DELETE FROM doctors WHERE doctorid='$delete_id'";
     if ($conn->query($sql) ){
-        header("Location: admin.php?message=Doctor+deleted+successfully");
+        header("Location: doctors.php?message=Doctor+deleted+successfully");
     } else {
-        header("Location: admin.php?error=Error+deleting+doctor");
+        header("Location: doctors.php?error=Error+deleting+doctor");
     }
     exit();
 }
 
 // Fetch all doctors
-$sql = "SELECT * FROM patient";
+$sql = "SELECT * FROM doctors";
 $result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
@@ -624,13 +624,13 @@ $result = $conn->query($sql);
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="viewPatient.php" >
+                    <a class="nav-link " href="viewPatient.php" >
                         <i class="bi bi-people-fill"></i>
                         <span class="menu-text">Patients</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="viewDoctors.php">
+                    <a class="nav-link active" href="">
                         <i class="bi bi-person-badge"></i>
                         <span class="menu-text">Staff</span>
                     </a>
@@ -680,18 +680,17 @@ $result = $conn->query($sql);
         <div class="alert alert-error"><?php echo htmlspecialchars($_GET['error']); ?></div>
     <?php endif; ?>
     
-    <div class="container">
+ <div class="container">
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
-                    <th>Initials</th>
                     <th>Gender</th>
                     <th>Email</th>
-                    <th>Date</th>
-                    
+                    <th>Specialization</th>
+                    <th>Department</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -699,27 +698,27 @@ $result = $conn->query($sql);
                 <?php if ($result->num_rows > 0): ?>
                     <?php while($row = $result->fetch_assoc()): ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($row['patientid']); ?></td>
+                            <td><?php echo htmlspecialchars($row['doctorid']); ?></td>
                             <td><?php echo htmlspecialchars($row['firstname']); ?></td>
-                            <td><?php echo htmlspecialchars($row['lastname']); ?></td>
-                            <td><?php echo htmlspecialchars($row['initials']); ?></td>
+                            <td><?php echo htmlspecialchars($row['laststname']); ?></td>
                             <td class="gender-<?php echo strtolower($row['sex']); ?>">
                                 <?php echo htmlspecialchars($row['sex']); ?>
                             </td>
                             <td><?php echo htmlspecialchars($row['email']); ?></td>
-                            <td><?php echo htmlspecialchars($row['created_at']); ?></td>
+                            <td><?php echo htmlspecialchars($row['specialization']); ?></td>
+                            <td><?php echo htmlspecialchars($row['department']); ?></td>
                             <td>
                                 <div class="action-buttons">
                                     <button class="btn btn-edit" onclick="openEditModal(
-                                        '<?php echo $row['patientid']; ?>',
+                                        '<?php echo $row['doctorid']; ?>',
                                         '<?php echo addslashes($row['firstname']); ?>',
-                                        '<?php echo addslashes($row['lastname']); ?>',
-                                        '<?php echo addslashes($row['initials']); ?>',
+                                        '<?php echo addslashes($row['laststname']); ?>',
                                         '<?php echo $row['sex']; ?>',
                                         '<?php echo addslashes($row['email']); ?>',
-                                        '<?php echo addslashes($row['created_at']); ?>'
+                                        '<?php echo addslashes($row['specialization']); ?>',
+                                        '<?php echo addslashes($row['department']); ?>'
                                     )">Edit</button>
-                                    <a href="?delete_id=<?php echo $row['patientid']; ?>" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete this doctor?')">Delete</a>
+                                    <a href="?delete_id=<?php echo $row['doctorid']; ?>" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete this doctor?')">Delete</a>
                                 </div>
                             </td>
                         </tr>
@@ -732,6 +731,7 @@ $result = $conn->query($sql);
             </tbody>
         </table>
     </div>
+    
     
 
     

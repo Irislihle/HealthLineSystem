@@ -13,19 +13,14 @@ $stmt3 ->execute();
 $result3 = $stmt3->get_result();
 $row3 = $result3->fetch_assoc();
 
-$sql2 = "SELECT * FROM patient WHERE patientid = ?";
-$stmt2 = $conn-> prepare($sql2);
-$stmt2->bind_param("s", $row3['patientid']);
-$stmt2 ->execute();
-$result2 = $stmt2->get_result();
-$row2 = $result2->fetch_assoc();
 
-$sql5 = "SELECT * FROM doctors WHERE doctorid = ?";
+
+/*$sql5 = "SELECT * FROM doctors WHERE doctorid = ?";
 $stmt5 = $conn-> prepare($sql5);
 $stmt5->bind_param("s", $row3['doctorid']);
 $stmt5 ->execute();
 $result5 = $stmt5->get_result();
-$row5 = $result5->fetch_assoc();
+$row5 = $result5->fetch_assoc();*/
 
 ?>
 <!DOCTYPE html>
@@ -38,6 +33,11 @@ $row5 = $result5->fetch_assoc();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Modal Bootstrap css -->
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <style>
         :root {
             --primary-color: #0d6efd;
@@ -57,6 +57,7 @@ $row5 = $result5->fetch_assoc();
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            
         }
         
         /* Top Navigation */
@@ -165,7 +166,7 @@ $row5 = $result5->fetch_assoc();
         }
         
         /* Main Content */
-        .main-content {
+        .main-content,.view-appointment-content {
             margin-left: var(--sidebar-width);
             padding: 20px;
             flex: 1;
@@ -326,6 +327,25 @@ $row5 = $result5->fetch_assoc();
                 margin-left: 0;
             }
         }
+
+        .active{
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-item:hover .nav-link {
+            cursor: pointer;
+        }
+
+        .card{
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin-bottom: 20px;
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -340,10 +360,7 @@ $row5 = $result5->fetch_assoc();
                 <i class="bi bi-hospital"></i>
                 <span>HealthLine</span>
             </a>
-            <a href="#" class="logo">
-                    <i class="fas fa-heartbeat"></i>
-                    HealthLine
-                </a>
+            
             <div class="d-flex align-items-center ms-auto">
                 <div class="emergency-alert me-3">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i>Emergency: 911
@@ -383,37 +400,37 @@ $row5 = $result5->fetch_assoc();
         <div class="sidebar-menu">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">
+                    <a class="nav-link " id="dashboard" href="#">
                         <i class="bi bi-speedometer2"></i>
                         <span class="menu-text">Dashboard</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="viewPatient.php">
+                    <a class="nav-link" href="viewPatient.php" >
                         <i class="bi bi-people-fill"></i>
                         <span class="menu-text">Patients</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="EditPage.php">
+                    <a class="nav-link" href="viewDoctors.php" >
                         <i class="bi bi-person-badge"></i>
                         <span class="menu-text">Staff</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="viewAppoints.php">
+                    <a class="nav-link"   id="viewAppoint" >
                         <i class="bi bi-calendar-check"></i>
                         <span class="menu-text">Appointments</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="regiDoctor.php">
+                    <a class="nav-link"  href="regiDoctor.php">
                         <i class="bi bi-file-medical"></i>
                         <span class="menu-text">Add Doctor</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="createAnnouncements.php">
                         <i class="bi bi-capsule"></i>
                         <span class="menu-text">Add Announcement</span>
                     </a>
@@ -558,7 +575,19 @@ $row5 = $result5->fetch_assoc();
              <?php
                     if ($result3->num_rows > 0) {
                         while($row3 = $result3->fetch_assoc()) {
-               
+                               $sql2 = "SELECT * FROM patient WHERE patientid = ?";
+                             $stmt2 = $conn-> prepare($sql2);
+                                  $stmt2->bind_param("s", $row3['patientid']);
+                             $stmt2 ->execute();
+                                 $result2 = $stmt2->get_result();
+                                $row2 = $result2->fetch_assoc();
+
+                                $sql5 = "SELECT * FROM doctors WHERE doctorid = ?";
+                                $stmt5 = $conn-> prepare($sql5);
+                                $stmt5->bind_param("s", $row3['doctorid']);
+                                $stmt5 ->execute();
+                                $result5 = $stmt5->get_result();
+                                $row5 = $result5->fetch_assoc();
                 ?>
                         <div class="activity-item">
                             <div class="activity-icon appointment">
@@ -604,6 +633,17 @@ $row5 = $result5->fetch_assoc();
         </div>
     </div>
 
+    <div class="view-appointment-content" style="display: none;">
+        <div class="card">
+           <?php include 'viewAppoints.php'; ?>
+        </div>
+    </div>
+
+   
+
+
+
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
@@ -641,6 +681,31 @@ $row5 = $result5->fetch_assoc();
                 sidebar.classList.remove('show');
             }
         });
+
+        $(document).ready(function() {
+            const viewAppointContent = $(".view-appointment-content");
+
+            $('#viewAppoint').click(function() {
+                $(".main-content").hide();
+                $(".view-appointment-content").show();
+                $(this).addClass("active");
+                $('#mainContent').removeClass("active");
+            });
+
+            $('#dashboard').click(function() {
+                $(".main-content").show();
+                $(".view-appointment-content").hide();
+                $(this).addClass("active");
+                $('#viewAppoint').removeClass("active");
+            });
+
+          
+        });
+        
+        
+        
+
+        
         
     </script>
 </body>
